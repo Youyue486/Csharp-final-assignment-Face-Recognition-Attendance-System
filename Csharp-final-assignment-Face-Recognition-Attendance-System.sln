@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Csharp-final-assignment-Face-Recognition-Attendance-System", "Csharp-final-assignment-Face-Recognition-Attendance-System.csproj", "{A8588E4C-BEC2-4109-9906-9D5A5F74EB65}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8588E4C-BEC2-4109-9906-9D5A5F74EB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8588E4C-BEC2-4109-9906-9D5A5F74EB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8588E4C-BEC2-4109-9906-9D5A5F74EB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8588E4C-BEC2-4109-9906-9D5A5F74EB65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {19D66FC8-59B5-4879-A147-B0C0600C6153}
+	EndGlobalSection
+EndGlobal
