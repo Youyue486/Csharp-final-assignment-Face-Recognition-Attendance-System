@@ -15,7 +15,7 @@ using Group = Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Mo
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
-    class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         // 数据库表映射
         public DbSet<User> Users { get; set; }
@@ -46,7 +46,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
                     {
                         WorkStartTime = new TimeSpan(9, 0, 0),
                         WorkEndTime = new TimeSpan(18, 0, 0),
-                        CheckInWindowStart = 15,
+                        CheckInWindow = 15,
                         WorkDays = WorkDay.Monday | WorkDay.Tuesday | WorkDay.Wednesday | WorkDay.Thursday | WorkDay.Friday
                     }
                 });

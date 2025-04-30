@@ -11,7 +11,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
     {
         public class User
         {
-            [Key, Required]
             public int Id { get; init; }
 
             [Required]
@@ -41,7 +40,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             public ICollection<UserStatus> Statuses { get; set; } = [];
             public ICollection<Request> Requests { get; set; } = [];
         }
-
         public class Group
         {
             public int Id { get; set; }
@@ -54,7 +52,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             public GroupSchedule? Schedule { get; set; }
             public ICollection<HolidayAdjustment> HolidayAdjustments { get; set; } = [];
         }
-
         public class GroupSchedule
         {
             public int Id { get; set; }
@@ -66,7 +63,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             public TimeSpan WorkEndTime { get; set; }//下班打卡时间
 
             [Required]
-            public int CheckInWindowStart { get; set; }//上班打卡时间窗(分钟)
+            public int CheckInWindow { get; set; }//上班打卡时间窗(分钟)
 
             [Required]
             public WorkDay WorkDays { get; set; } //工作日（按位存储）
