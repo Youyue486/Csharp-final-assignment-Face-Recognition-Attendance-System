@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
     public class UserRepository : IUserRepository
     {
+
         private readonly AppDbContext _context;
 
         public UserRepository(AppDbContext context)
@@ -20,6 +23,13 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         {
             User? user = _context.Users.FirstOrDefault(u => u.Id == Userid);
             if(user ==  null)
+                throw new Exception("用户不存在");
+            return user;
+        }
+        public User GetByName(string name)
+        {
+            User? user = _context.Users.FirstOrDefault(u => u.Name == name);
+            if (user == null)
                 throw new Exception("用户不存在");
             return user;
         }

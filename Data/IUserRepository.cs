@@ -11,6 +11,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
     {
         // 获取用户信息
         User GetById(int Userid);
+        public User GetByName(string name);
         // 获取所有用户
         ICollection<User> GetAllUsers();
         // 添加用户
