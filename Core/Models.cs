@@ -28,7 +28,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             public string? PhoneNumber { get; set; }
 
             [Required]
-            public required string Password { get; set; }
+            public required byte[] Password { get; set; }
 
             public bool IsAdmin { get; set; } = false;
 

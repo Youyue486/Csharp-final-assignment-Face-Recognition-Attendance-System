@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Presentation
+namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
 {
-    class UserDashboardViewModel
+    class AdminViewModel
     {
     }
 }
