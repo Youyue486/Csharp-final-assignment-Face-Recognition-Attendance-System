@@ -3,7 +3,6 @@ using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Data;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.View;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel;
-using GalaSoft.MvvmLight.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -12,6 +11,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
+using NavigationService = Csharp_final_assignment_Face_Recognition_Attendance_System.Business.NavigationService;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System;
 
@@ -25,35 +25,84 @@ public partial class App : Application
     //测试业务逻辑
     public static void test(IServiceProvider serviceProvider)
     {
+        #region 初始化仓库
         // 使用 null 条件运算符和空合并运算符来处理可能的 null 值  
-        IUserRepository? test_Repo = serviceProvider.GetService<IUserRepository>();
+        IUserRepository? _userRepo = serviceProvider.GetService<IUserRepository>();
+        IGroupRepository? _groupRepo = serviceProvider.GetService<IGroupRepository>();
 
-        IAttendanceRepository? test_Att_Repo = serviceProvider.GetService<IAttendanceRepository>();
-
-        // 用户增删改查测试  
-        if (test_Repo?.GetAllUsers() == null)
+        if (_userRepo == null)
         {
-            throw new Exception("用户表为空，请先添加用户。");
-        }
-        var users = test_Repo.GetAllUsers();
-        foreach (var user in users)
-        {
-            Debug.WriteLine($"\nUser ID: {user.Id}, Name: {user.Name}\n");
+            throw new InvalidOperationException("IUserRepository service is not registered.");
         }
 
-        // 查找用户  
-        User? testUser = test_Repo.GetByName("测试用户");
-        if (testUser != null && test_Att_Repo != null)
+        if (_groupRepo == null)
         {
-            testUser.Age = 18;
-            test_Att_Repo.AddAttendanceRecord(new AttendanceRecord
+            throw new InvalidOperationException("IGroupRepository service is not registered.");
+        }
+        #endregion
+
+        #region 初始化测试用户、用户组
+        //初始化用户
+        User Alice = new User
+        {
+            EmployeeNumber = 101,
+            Name = "Alice",
+            Password = [1, 2, 3, 4, 5, 6],
+            userRole = UserRole.Normal
+        };
+        User Bob = new User
+        {
+            EmployeeNumber = 102,
+            Name = "Bob",
+            Password = [1, 2, 3, 4, 5, 6],
+            userRole = UserRole.Normal
+        };
+        _userRepo.Add(Alice);
+        _userRepo.Add(Bob);
+
+        //初始化用户组
+        Group Teacher = new Group
+        {
+            GroupName = "Teacher",
+            groupDescription = "This is a Teacher group.",
+            Schedule = new GroupSchedule
             {
-                UserId = testUser.Id,
-                User = testUser,
-                CheckTime = DateTime.Now,
-                CheckType = CheckType.CheckIn
-            });
-        }
+                WorkStartTime = new TimeSpan(9, 0, 0),
+                WorkEndTime = new TimeSpan(18, 0, 0),
+                CheckInWindow = 15,
+                WorkDays = (WorkDay.Monday | WorkDay.Wednesday | WorkDay.Friday),
+            }
+        };
+        Group Student = new Group
+        {
+            GroupName = "Student",
+            groupDescription = "This is a Student group.",
+            Schedule = new GroupSchedule
+            {
+                WorkStartTime = new TimeSpan(9, 0, 0),
+                WorkEndTime = new TimeSpan(18, 0, 0),
+                CheckInWindow = 15,
+                WorkDays = (WorkDay.Tuesday | WorkDay.Thursday | WorkDay.Saturday),
+            }
+        };
+        _groupRepo.AddGroup(Teacher);
+        _groupRepo.AddGroup(Student);
+
+        //将用户添加到组
+        Alice.Group = Teacher;
+        Bob.Group = Student;
+        _userRepo.Update(Alice);
+        _userRepo.Update(Bob);
+        #endregion
+
+        
+
+        #region 清除测试用户、用户组
+        _groupRepo.DeleteGroupByName("Teacher");
+        _groupRepo.DeleteGroupByName("Student");
+        _userRepo.DeleteById(_userRepo.GetByName("Alice").Id);
+        _userRepo.DeleteById(_userRepo.GetByName("Bob").Id);
+        #endregion
     }
 
     protected override void OnStartup(StartupEventArgs e)
@@ -76,17 +125,14 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        // 释放资源
+        // 释放资源idOperationException: Window 必须是树的根目录。不能将 Window 添加为 Visual 的子目录。
         if (ServiceProvider is IDisposable disposable)
         {
             disposable.Dispose();
         }
     }
 
-    /// <summary>
-    /// 配置服务
-    /// </summary>
-    /// <param name="services"></param>
+    #region 配置服务
     private void ConfigureServices(IServiceCollection services)
     {
         // ------------------------ 数据访问层注册 ------------------------
@@ -110,12 +156,14 @@ public partial class App : Application
         services.AddTransient<AdminViewModel>();
         services.AddTransient<UserDashboardViewModel>();
         services.AddTransient<MainViewModel>();
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<HomeViewModel>();
 
         //注册所有View（需继承Window）
         services.AddTransient<MainWindow>();
 
         // 注册 INavigationService窗口导航服务
-        services.AddSingleton<NavigationService, NavigationService>();
-
+        services.AddSingleton<INavigationService, NavigationService>();
     }
+    #endregion
 }

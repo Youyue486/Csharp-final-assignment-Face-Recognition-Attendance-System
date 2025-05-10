@@ -1,8 +1,7 @@
 ﻿<Application x:Class="Csharp_final_assignment_Face_Recognition_Attendance_System.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System">
-    <Application.Resources>
-         
-    </Application.Resources>
+             xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System"
+             xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
+             xmlns:views="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View">
 </Application>
