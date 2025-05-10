@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
 
+///////////checked!//////////////
+
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
     interface IUserRepository

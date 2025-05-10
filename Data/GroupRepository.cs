@@ -26,9 +26,10 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
             return _context.Groups.ToList();
         }
         // 根据ID获取组  
-        public Group GetGroupById(int id)
+        public Group GetGroupByName(string name)
         {
-            Group? group = _context.Groups.Find(id);
+            Group? group = _context.Groups
+                .FirstOrDefault(g => g.GroupName == name);
             // 检查组是否存在
             if (group == null)
             {
@@ -43,9 +44,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
             _context.SaveChanges();
         }
         // 删除组
-        public void DeleteGroup(int id)
+        public void DeleteGroupByName(string name)
         {
-            var group = GetGroupById(id);
+            var group = GetGroupByName(name);
             if (group != null)
             {
                 _context.Groups.Remove(group);

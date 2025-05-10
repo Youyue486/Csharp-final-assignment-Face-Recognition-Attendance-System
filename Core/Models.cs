@@ -30,14 +30,16 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             [Required]
             public required byte[] Password { get; set; }
 
-            public bool IsAdmin { get; set; } = false;
+            public UserRole userRole { get; set; } = UserRole.Normal;
 
             public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = [];
+
+            public double AttendenceRate { get; set; } = 1.0;
 
             //导航属性
             public Group? Group { get; set; }
             public int? GroupId { get; set; }
-            public ICollection<UserStatus> Statuses { get; set; } = [];
+            public UserStatusType Statuses { get; set; }
             public ICollection<Request> Requests { get; set; } = [];
         }
         public class Group
@@ -46,6 +48,8 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
 
             [Required, MaxLength(50)]
             public required string GroupName { get; set; }
+
+            public string? groupDescription { get; set; }
 
             //导航属性
             public ICollection<User> Users { get; set; } = [];
@@ -110,25 +114,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
 
             [Required]
             public required int UserId { get; set; }
-        }
-        public class UserStatus
-        {
-            public int Id { get; set; }
-
-            [Required]
-            public DateTime StartTime { get; set; }
-
-            public DateTime? EndTime { get; set; }//null表示状态持续中
-
-            [Required]
-            public required UserStatusType StatusType { get; set; } // Enum type
-
-            //导航属性
-            [Required]
-            public required User User { get; set; }
-
-            [Required]
-            public int UserId { get; set; }
         }
         public class Request
         {

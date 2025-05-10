@@ -11,6 +11,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
     /// <summary>
     /// 用户状态类型（支持叠加，但BusinessTrip和Vacation需独占）
     /// </summary>
+    [Flags]
     public enum UserStatusType
     {
         [Description("在班")]
