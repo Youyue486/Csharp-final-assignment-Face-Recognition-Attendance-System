@@ -8,10 +8,16 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     interface IUserService
     {
-        public string Authenticate(string username, string password);
-        public List<AttendanceRecord> GetAttendanceRecords(DateTime from, DateTime to);
-        public string ExportAttendanceToExcel(List<AttendanceRecord> records);
-        public bool SubmitLeaveRequest(string reason);
-        public bool SubmitTravelRequest(string reason);
+        // 用户认证（通过工号+密码）
+        User? Authenticate(int employeeNumber, string password);
+
+        // 获取用户完整考勤记录（包含导航属性）
+        List<AttendanceRecord> GetUserAttendanceRecords(int userId, DateTime start, DateTime end);
+
+        // 导出当前用户考勤记录
+        string ExportUserAttendance(int userId, DateTime start, DateTime end);
+
+        // 申请提交（统一入口）
+        bool SubmitRequest(int userId, RequestType type, string content, DateTime startDate, DateTime endDate);
     }
 }
