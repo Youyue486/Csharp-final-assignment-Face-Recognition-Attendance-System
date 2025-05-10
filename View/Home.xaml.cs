@@ -10,18 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.View
 {
     /// <summary>
-    /// AdminWindow.xaml 的交互逻辑
+    /// Home.xaml 的交互逻辑
     /// </summary>
-    public partial class AdminWindow : Window
+    public partial class Home : UserControl
     {
-        public AdminWindow()
+        public Home()
         {
             InitializeComponent();
         }
+
     }
 }
