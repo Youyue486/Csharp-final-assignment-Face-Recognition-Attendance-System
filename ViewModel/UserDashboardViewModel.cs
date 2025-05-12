@@ -1,18 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Business;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
+using Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
 {
-    class UserDashboardViewModel
+    public enum Section
     {
+        Attendance,
+        Application
+    }
+    public partial class UserDashboardViewModel : ObservableObject
+    {
+        private Section _currentSection = Section.Attendance;
+        public Section CurrentSection
+        {
+            get => _currentSection;
+            set { _currentSection = value; OnPropertyChanged(); }
+        }
+
+        public ICommand ShowAttendanceCommand { get; }
+        public ICommand ShowApplicationCommand { get; }
+
+        public UserDashboardViewModel()
+        {
+            ShowAttendanceCommand = new RelayCommand(() => CurrentSection = Section.Attendance);
+            ShowApplicationCommand = new RelayCommand(() => CurrentSection = Section.Application);
+        }
+
         private readonly IUserService _userService;
         private readonly int _currentUserId;
 
@@ -20,13 +46,18 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         public ObservableCollection<AttendanceRecord> AttendanceRecords { get; } = new();
 
         // 申请表单字段
-        public DateTime LeaveStartDate { get; set; } = DateTime.Today;
-        public DateTime LeaveEndDate { get; set; } = DateTime.Today.AddDays(1);
-        public string LeaveReason { get; set; } = string.Empty;
-
-        public DateTime TravelStartDate { get; set; } = DateTime.Today;
-        public DateTime TravelEndDate { get; set; } = DateTime.Today.AddDays(1);
-        public string TravelReason { get; set; } = string.Empty;
+        [ObservableProperty]
+        public DateTime leaveStartDate = DateTime.Today;
+        [ObservableProperty]
+        public DateTime leaveEndDate = DateTime.Today.AddDays(1);
+        [ObservableProperty]
+        public string leaveReason = string.Empty;
+        [ObservableProperty]
+        public DateTime travelStartDate = DateTime.Today;
+        [ObservableProperty]
+        public DateTime travelEndDate = DateTime.Today.AddDays(1);
+        [ObservableProperty]
+        public string travelReason = string.Empty;
 
         // 命令系统
         public RelayCommand LoadAttendanceCommand { get; }
@@ -78,7 +109,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             var success = await Task.Run(() =>
                 _userService.SubmitRequest(
                     _currentUserId,
-                    RequestType.Leave,
+                    RequestType.BusinessTrip,
                     LeaveReason,
                     LeaveStartDate,
                     LeaveEndDate));
@@ -91,7 +122,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             var success = await Task.Run(() =>
                 _userService.SubmitRequest(
                     _currentUserId,
-                    RequestType.Travel,
+                    RequestType.Vacation,
                     TravelReason,
                     TravelStartDate,
                     TravelEndDate));
