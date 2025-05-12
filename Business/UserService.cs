@@ -22,10 +22,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         private IUserRepository _userRepository;
         private AppDbContext _context;
 
-        public UserService(IUserRepository userRepository, IGroupRepository groupRepository)
+        public UserService(IUserRepository userRepository, AppDbContext context)
         {
             _userRepository = userRepository;
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            _context = context;
+            //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
         public User? Authenticate(int employeeNumber, string password)
