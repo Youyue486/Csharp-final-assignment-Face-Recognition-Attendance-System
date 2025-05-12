@@ -27,17 +27,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         public Section CurrentSection
         {
             get => _currentSection;
-            set { _currentSection = value; OnPropertyChanged(); }
+            set => SetProperty(ref _currentSection, value);
         }
 
         public ICommand ShowAttendanceCommand { get; }
         public ICommand ShowApplicationCommand { get; }
-
-        public UserDashboardViewModel()
-        {
-            ShowAttendanceCommand = new RelayCommand(() => CurrentSection = Section.Attendance);
-            ShowApplicationCommand = new RelayCommand(() => CurrentSection = Section.Application);
-        }
 
         private readonly IUserService _userService;
         private readonly int _currentUserId;
@@ -65,11 +59,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         public RelayCommand SubmitLeaveCommand { get; }
         public RelayCommand SubmitTravelCommand { get; }
 
-        public UserDashboardViewModel(IUserService userService, int userId)
+        public UserDashboardViewModel(IUserService userService)
         {
+            ShowAttendanceCommand = new RelayCommand(() => CurrentSection = Section.Attendance);
+            ShowApplicationCommand = new RelayCommand(() => CurrentSection = Section.Application);
             _userService = userService;
-            _currentUserId = userId;
-
             LoadAttendanceCommand = new RelayCommand(async () => await LoadAttendanceAsync());
             ExportExcelCommand = new RelayCommand(async () => await ExportExcelAsync());
             SubmitLeaveCommand = new RelayCommand(async () => await SubmitLeaveAsync());
@@ -130,8 +124,8 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             // 处理提交结果
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //public event PropertyChangedEventHandler? PropertyChanged;
+        //protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        //    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
