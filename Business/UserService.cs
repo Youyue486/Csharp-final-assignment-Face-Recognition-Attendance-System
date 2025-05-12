@@ -2,10 +2,15 @@
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OfficeOpenXml;
+using OfficeOpenXml;  //装epplus
+using OfficeOpenXml.Table;
+using OfficeOpenXml.Style;
+using OfficeOpenXml.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
@@ -14,12 +19,13 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     class UserService : IUserService
     {
-        private readonly AttendanceDbContext _context;
+        private IUserRepository _userRepository;
+        private AppDbContext _context;
 
-        public UserService(AttendanceDbContext context)
+        public UserService(IUserRepository userRepository, IGroupRepository groupRepository)
         {
-            _context = context;
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            _userRepository = userRepository;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
         public User? Authenticate(int employeeNumber, string password)
@@ -79,6 +85,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             var request = new Request
             {
                 UserId = userId,
+                User =  _userRepository.GetById(userId), 
                 RequestType = type,
                 Content = content,
                 SubmitTime = DateTime.Now,
