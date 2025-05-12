@@ -11,31 +11,32 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
     /// <summary>
     /// 用户状态类型（支持叠加，但BusinessTrip和Vacation需独占）
     /// </summary>
+    [Flags]
     public enum UserStatusType
     {
         [Description("在班")]
-        OnDuty,          // 正常在岗状态，可与Late/OverTime叠加
+        在班=1,          // 正常在岗状态，可与Late/OverTime叠加
 
         [Description("下班")]
-        OffDuty,         // 独占状态（不可与其他状态共存）
+        下班=2,         // 独占状态（不可与其他状态共存）
 
         [Description("加班")]
-        Overtime,        // 可与OnDuty/Overtime叠加
+        加班=4,        // 可与OnDuty/Overtime叠加
 
         [Description("出差")]
-        BusinessTrip,    // 独占状态（不可与其他状态共存）
+        出差=8,    // 独占状态（不可与其他状态共存）
 
         [Description("旷班")]
-        Absent,          // 独占状态（不可与其他状态共存）
+        旷班=16,          // 独占状态（不可与其他状态共存）
 
         [Description("迟到")]
-        Late,            // 可与OnDuty/Overtime叠加
+        迟到=32,            // 可与OnDuty/Overtime叠加
 
         [Description("早退")]
-        EarlyLeave,      // 独占状态（不可与其他状态共存）
+        早退=64,      // 独占状态（不可与其他状态共存）
 
-        [Description("休假")]
-        Vacation         // 独占状态（不可与其他状态共存）
+        [Description("请假")]
+        请假=128        // 独占状态（不可与其他状态共存）
     }
     #endregion
 
@@ -49,6 +50,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
     {
         [Description("上班打卡")]
         CheckIn,
+
+        [Description("上班补卡")]
+        CheckInSupplement,
 
         [Description("下班打卡")]
         CheckOut

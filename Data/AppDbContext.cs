@@ -23,7 +23,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         public DbSet<GroupSchedule> GroupSchedules { get; set; }
         public DbSet<HolidayAdjustment> HolidayAdjustments { get; set; }
         public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
-        public DbSet<UserStatus> UserStatuses { get; set; }
+        //public DbSet<UserStatus> UserStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -85,12 +85,12 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // User ↔ UserStatus（一对多）
-            modelBuilder.Entity<UserStatus>()
-                .HasOne(s => s.User)
-                .WithMany(u => u.Statuses)
-                .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //// User ↔ UserStatus（一对多）
+            //modelBuilder.Entity<UserStatus>()
+            //    .HasOne(s => s.User)
+            //    .WithMany(u => u.Statuses)
+            //    .HasForeignKey(s => s.UserId)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             // User ↔ Request（一对多）
             modelBuilder.Entity<Request>()
@@ -101,10 +101,10 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 
             // ------------------------ 枚举类型配置 ------------------------
             // 将枚举存储为字符串（更易读）
-            modelBuilder.Entity<UserStatus>()
-                .Property(s => s.StatusType)
-                .HasConversion<string>()
-                .HasMaxLength(20);
+            //modelBuilder.Entity<UserStatus>()
+            //    .Property(s => s.StatusType)
+            //    .HasConversion<string>()
+            //    .HasMaxLength(20);
 
             modelBuilder.Entity<Request>()
                 .Property(r => r.RequestType)
@@ -122,9 +122,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
                 .HasIndex(g => g.GroupName)
                 .IsUnique();
 
-            // 用户状态时间范围查询优化
-            modelBuilder.Entity<UserStatus>()
-                .HasIndex(s => new { s.UserId, s.StartTime, s.EndTime });
+            //// 用户状态时间范围查询优化
+            //modelBuilder.Entity<UserStatus>()
+            //    .HasIndex(s => new { s.UserId, s.StartTime, s.EndTime });
 
             // 打卡记录按用户和时间查询优化
             modelBuilder.Entity<AttendanceRecord>()

@@ -5,12 +5,130 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View"
              xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
-             d:DataContext="{d:DesignInstance Type=vm:HomeViewModel}"
+             d:DataContext="{d:DesignInstance Type=vm:AdminViewModel}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:Background="White"
              mc:Ignorable="d">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!--管理员标题-->
+        <TextBlock Text="Admin Panel" FontSize="24" FontWeight="Bold" Padding="10" Background="#FF00A185"/>
+        <!--主界面-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--左侧菜单栏-->
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Background="#FF5ABDAC">
+                <Button Content="Home" Width="100" Height="30" Margin="10,30,10,10"/>
+                <Button Content="Attendance" Width="100" Height="30" Margin="10,10"/>
+                <Button Content="Settings" Width="100" Height="30" Margin="10,10"/>
+                <Button Content="Logout" Width="100" Height="30" Margin="10,10"/>
+            </StackPanel>
+            <!--面板-->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--搜索栏、添加用户-->
+                <Grid Grid.Row="0" HorizontalAlignment="Stretch" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="50"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Margin="10,10,10,10" Grid.Column="0" Height="30" Text="张三"/>
+                    <Button Grid.Column="1" Content="搜索用户" Width="80" Height="30" Margin="0,10,10,10"/>
+                    <Button Grid.Column="2" Content="新增用户" Width="80" Height="30" Margin="0,10,10,10" Command="{Binding AddUserCommand}"/>
+                </Grid>
+                <!--按用户状态筛选-->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                        <ColumnDefinition Width="*" MinWidth="50"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="员工状态" TextAlignment="Center" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="1" Content="在职" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="2" Content="下班" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="3" Content="加班" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="4" Content="出差" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="5" Content="旷班" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="6" Content="迟到" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="7" Content="早退" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="8" Content="请假" VerticalAlignment="Center"/>
+                </Grid>
+                <Separator Grid.Row="2"/>
+                <!--选择排序方式、导出表格选项-->
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="55"/>
+                        <ColumnDefinition Width="*" MinWidth="100"/>
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="排序方式" TextAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Width="100" Height="30" HorizontalAlignment="Left" SelectedIndex="0">
+                        <ComboBoxItem Content="按姓名"/>
+                        <ComboBoxItem Content="按考勤时间"/>
+                        <ComboBoxItem Content="按考勤状态"/>
+                    </ComboBox>
+                    <Button Grid.Column="2" Content="导出表格" Width="80" Height="30" Margin="0,0,30,0" HorizontalAlignment="Right"/>
+                </Grid>
+                <Separator Grid.Row="4"/>
+                <ListView Grid.Row="5" ItemsSource="{Binding Users}">
+                    <!--设置ListView的Item属性，实现右键弹出浮窗-->
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Tag"
+                                    Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem Header="修改分组"
+                                                  Command="{Binding Path=PlacementTarget.Tag.EditUserGroupCommand, 
+                                                        RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding}"/>
+                                        <MenuItem Header="删除用户"
+                                                  Command="{Binding Path=PlacementTarget.Tag.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    
+                    <!--ListView内容-->
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="工号" Width ="40" DisplayMemberBinding="{Binding EmployeeNumber}"/>
+                            <GridViewColumn Header="姓名" Width="50" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="所属组" Width="70" DisplayMemberBinding="{Binding GroupName}"/>
+                            <GridViewColumn Header="年龄" Width="30" DisplayMemberBinding="{Binding Age}"/>
+                            <GridViewColumn Header="状态" Width="100" DisplayMemberBinding="{Binding Statuses}"/>
+                            <GridViewColumn Header="手机号" Width="100" DisplayMemberBinding="{Binding PhoneNumber}"/>
+                            <GridViewColumn Header="邮箱" Width="120" DisplayMemberBinding="{Binding Email}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Grid>
+        <!--搜索栏-->
+        
     </Grid>
 </UserControl>

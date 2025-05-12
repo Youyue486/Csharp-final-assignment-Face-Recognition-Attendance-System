@@ -27,17 +27,18 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             [Phone]
             public string? PhoneNumber { get; set; }
 
-            [Required]
-            public required byte[] Password { get; set; }
+            public byte[]? Password { get; set; }
 
-            public UserRole userRole { get; set; } = UserRole.Normal; // Enum type
+            public UserRole userRole { get; set; } = UserRole.Normal;
 
             public ICollection<AttendanceRecord> AttendanceRecords { get; set; } = [];
+
+            public double AttendenceRate { get; set; } = 1.0;
 
             //导航属性
             public Group? Group { get; set; }
             public int? GroupId { get; set; }
-            public UserStatusType Statuses;
+            public UserStatusType Statuses { get; set; }
             public ICollection<Request> Requests { get; set; } = [];
         }
         public class Group
@@ -46,6 +47,8 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
 
             [Required, MaxLength(50)]
             public required string GroupName { get; set; }
+
+            public string? groupDescription { get; set; }
 
             //导航属性
             public ICollection<User> Users { get; set; } = [];

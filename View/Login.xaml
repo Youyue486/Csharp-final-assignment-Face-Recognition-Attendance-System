@@ -11,6 +11,7 @@
         d:Background="White"
         mc:Ignorable="d">
     <Grid>
-        <Button Content="进入管理员界面" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="130"/>
+        <Button Content="进入管理员界面" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="130"
+                Command="{Binding LoginCommand}"/>
     </Grid>
 </UserControl>

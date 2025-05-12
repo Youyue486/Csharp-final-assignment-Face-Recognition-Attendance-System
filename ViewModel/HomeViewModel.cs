@@ -17,7 +17,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         public HomeViewModel(INavigationService navigator) => _navigator = navigator;
 
         [RelayCommand]
-        public void Login()
+        public void GoToAdminLogin()
         { 
             _navigator.NavigateTo<LoginViewModel>();
         }

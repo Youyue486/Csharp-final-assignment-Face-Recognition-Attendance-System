@@ -1,4 +1,5 @@
-﻿using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Data;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs;
 using System;
@@ -13,7 +14,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     class AdminService : IAdminService
     {
-        [Required]
         private IUserRepository _userRepository;
         private IGroupRepository _groupRepository;
         public AdminService(IUserRepository userRepository, IGroupRepository groupRepository)
@@ -22,17 +22,20 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             _groupRepository = groupRepository;
         }
         
-        #region 浏览所有用户  DONE
+        #region 浏览所有用户  DONE!
         //增加用户
-        public void AddUser(string name, byte[] password, int EmployNumber, int Age = 18, UserRole userRole = UserRole.Normal, string? Email = null, string? Phone = null)
+        public void AddUser(string name, byte[]? password, int EmployNumber, string? GroupName, UserRole userRole, int? Age = 18, string? Email = null, string? Phone = null)
         {
+            Group? Group = _groupRepository.GetGroupByName(GroupName);
+            int? GroupId = Group?.Id;
             User user = new User()
             {
                 Name = name,
                 Password = password,
                 EmployeeNumber = EmployNumber,
+                GroupId = GroupId,
                 Age = Age,
-                userRole = UserRole.Normal,
+                userRole = userRole,
                 Email = Email,
                 PhoneNumber = Phone
             };
@@ -40,15 +43,39 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         }
         
         //删除用户
-        public void DeleteUser(int id)
+        public void DeleteUser(string name)
         {
-            _userRepository.DeleteById(id);
+            _userRepository.DeleteByName(name);
         }
         
         //修改用户信息
-        public void UpdateUser(int id, string name, string password, int EmployNumber, int Age = 18, UserRole userRole = UserRole.Normal, string? Email = null, string? Phone = null)
+        public void UpdateUser(int id,
+                               string name,
+                               byte[]? password, 
+                               int EmployNumber,
+                               string? GroupName,
+                               int? Age = 18, 
+                               UserRole? userRole = UserRole.Normal, 
+                               string? Email = null, 
+                               string? Phone = null
+            )
         {
             throw new NotImplementedException();
+        }
+        public void UpdateUserGroup(string name, string groupName)
+        {
+            User user = _userRepository.GetByName(name);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            Group? group = _groupRepository.GetGroupByName(groupName);
+            if (group == null)
+            {
+                throw new Exception($"Group {groupName} not found");
+            }
+            user.GroupId = group.Id;
+            _userRepository.Update(user);
         }
 
         //查询用户信息
@@ -59,43 +86,58 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             {
                 throw new Exception("User not found");
             }
+            var group = _groupRepository.GetGroupById(user.GroupId);
+            string? groupName = group != null ? group.GroupName : null;
             UserDTO userDTO = new UserDTO()
             {
                 Name = user.Name,
                 EmployeeNumber = user.EmployeeNumber,
                 Age = user.Age,
-                userRole = UserRole.Normal,
+                userRole = user.userRole,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 AttendanceRecords = user.AttendanceRecords,
                 AttendenceRate = user.AttendenceRate,
-                Group = user.Group,
+                GroupName = groupName,
                 GroupId = user.GroupId,
                 Statuses = user.Statuses,
                 Requests = user.Requests
             };
             return userDTO;
         }
-        public ICollection<User>? GetAllUsers()
+        public ICollection<UserDTO> GetAllUsersDTO()
         {
-            return _userRepository.GetAllUsers();
+            var users = _userRepository.GetAllUsers();
+            var usersDTO = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                usersDTO.Add(UserInfomation(user.Id));
+            }
+            return usersDTO;
         }
-        public ICollection<User>? GetUsersByUserStatuses(UserStatusType Statuses)
+
+        public ICollection<UserDTO> GetUserDTOsByUserStatuses(UserStatusType? Statuses)
         {
+            if (Statuses == null) return GetAllUsersDTO();
             ICollection<User> users = _userRepository.GetAllUsers();
             ICollection<User>? selectedUsers = users.Where(user => (user.Statuses & Statuses) != 0) as ICollection<User>;
-            return selectedUsers;
+            ICollection<UserDTO>? selectedUsersDTO = [];
+            foreach(User user in users)
+            {
+                selectedUsersDTO.Add(UserInfomation(user.Id));
+            }
+            return selectedUsersDTO;
         }
-        public ICollection<User>? GetUsersByGroup(Group group)
+        public ICollection<User> GetUsersByGroup(Group group)
         {
             ICollection<User> users = _userRepository.GetAllUsers();
-            ICollection<User>? selectedUsers = users.Where(user => user.Group == group) as ICollection<User>;
-            return selectedUsers;
+            var selectedUsers = users.Where(user => user.Group == group) as ICollection<User>;
+            return selectedUsers == null?[]:selectedUsers;
         }
         //TODO导出考勤
         #endregion
 
-        #region 浏览所有组  TODO
+        #region 浏览所有组  DONE!
         //增
         public void AddGroup(string groupName, string? groupDescription = null)
         {
@@ -111,27 +153,41 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         {
             _groupRepository.DeleteGroupByName(groupName);
         }
-        public void DeleteSchdule(int groupId)
+        public void DeleteSchdule(string groupName)
         {
-            throw new NotImplementedException();
+            Group? group = _groupRepository.GetGroupByName(groupName);
+            if (group == null)
+            {
+                throw new Exception($"不存在组:{groupName}");
+            }
+            group.Schedule = null;
+            _groupRepository.UpdateGroup(group);
         }
-        public void DeleteHolidayAdjustment(int groupId)
+        public void DeleteHolidayAdjustment(string groupName)
         {
+            //TODO
             throw new NotImplementedException();
         }
         //改
-        public void SetSchdule(int groupId, GroupSchedule schedule)
+        public void SetSchdule(string groupName, GroupSchedule schedule)
         {
-            throw new NotImplementedException();
+            Group? group = _groupRepository.GetGroupByName(groupName);
+            if (group == null)
+            {
+                throw new Exception($"不存在组:{groupName}");
+            }
+            group.Schedule = schedule;
+            _groupRepository.UpdateGroup(group);
         }     
-        public void SetHolidayAdjustment(int groupId, HolidayAdjustment adjustment)
+        public void SetHolidayAdjustment(string groupName, HolidayAdjustment adjustment)
         {
+            //TODO
             throw new NotImplementedException();
         }
         //查
-        public void GetAllGroups()
+        public ICollection<Group> GetAllGroups()
         {
-            throw new NotImplementedException();
+            return _groupRepository.GetAllGroups();
         }
         #endregion
 
@@ -150,22 +206,43 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         }
         #endregion
 
-        #region 报表  TODO
-        public double GetUserAttendanceRate(int userId, DateTime startDate, DateTime endDate)
+        #region 报表  TODO 换成可以按时间段查询
+        public double GetUserAttendanceRate(string userName)
         {
-            throw new NotImplementedException();
+            User user = _userRepository.GetByName(userName);
+            if (user == null)
+            {
+                throw new Exception($"未找到用户:{userName}");
+            }
+            double attendanceRate = user.AttendenceRate;
+            return attendanceRate;
         }
-        public double GetGroupAttendanceRate(int groupId, DateTime startDate, DateTime endDate)
+        public double GetGroupAttendanceRate(string groupName)
         {
-            throw new NotImplementedException();
+            Group? group = _groupRepository.GetGroupByName(groupName);
+            if (group == null)
+            {
+                throw new Exception($"未找到组:{groupName}");
+            }
+            double attendanceRate = 0;
+            foreach(User user in group.Users)
+            {
+                attendanceRate += user.AttendenceRate;
+            }
+            attendanceRate /= group.Users.Count;
+            return attendanceRate;
         }
-        public double GetAllUsersAttendanceRate(DateTime startDate, DateTime endDate)
+        public double GetAverageUsersAttendanceRate()
         {
-            throw new NotImplementedException();
+            ICollection<User> users = _userRepository.GetAllUsers();
+            double attendanceRate = 0;
+            foreach (User user in users)
+            {
+                attendanceRate += user.AttendenceRate;
+            }
+            attendanceRate /= users.Count;
+            return attendanceRate;
         }
-
         #endregion
-
-        
     }
 }

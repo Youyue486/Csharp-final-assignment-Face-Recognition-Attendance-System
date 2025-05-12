@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
+
+///////////checked!//////////////
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
@@ -14,11 +17,13 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         public User GetByName(string name);
         // 获取所有用户
         ICollection<User> GetAllUsers();
+        ICollection<User> GetUsersByStatus(UserStatusType filter);
         // 添加用户
         void Add(User user);
         // 更新用户信息
         void Update(User user);
         // 删除用户
         void DeleteById(int Userid);
+        void DeleteByName(string name);
     }
 }

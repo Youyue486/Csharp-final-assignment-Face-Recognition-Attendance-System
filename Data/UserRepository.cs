@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,6 +39,14 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         {
             return _context.Users.ToList();
         }
+        public ICollection<User> GetUsersByStatus(UserStatusType filter)
+        {
+            var users = _context.Users.Where(u => (u.Statuses & filter) != 0).ToList();
+            if (users == null || users.Count == 0)
+                return new List<User>();
+            return users;
+        }
+
         // 添加用户
         public void Add(User user)
         {
@@ -54,6 +63,17 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         public void DeleteById(int Userid)
         {
             var user = _context.Users.Find(Userid);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
+            else
+                throw new Exception("用户不存在");
+        }
+        public void DeleteByName(string name)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Name == name);
             if (user != null)
             {
                 _context.Users.Remove(user);

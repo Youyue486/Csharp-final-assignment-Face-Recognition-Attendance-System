@@ -12,7 +12,7 @@
              mc:Ignorable="d">
     <Grid>
         <Button Content="管理员登陆" HorizontalAlignment="Center" VerticalAlignment="Center" Height="56" Width="130"
-                Command="{Binding LoginCommand}"/>
+                Command="{Binding GoToAdminLoginCommand}"/>
 
     </Grid>
 </UserControl>

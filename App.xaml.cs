@@ -43,22 +43,22 @@ public partial class App : Application
 
         #region 初始化测试用户、用户组
         //初始化用户
-        User Alice = new User
-        {
-            EmployeeNumber = 101,
-            Name = "Alice",
-            Password = [1, 2, 3, 4, 5, 6],
-            userRole = UserRole.Normal
-        };
-        User Bob = new User
-        {
-            EmployeeNumber = 102,
-            Name = "Bob",
-            Password = [1, 2, 3, 4, 5, 6],
-            userRole = UserRole.Normal
-        };
-        _userRepo.Add(Alice);
-        _userRepo.Add(Bob);
+        //User Alice = new User
+        //{
+        //    EmployeeNumber = 101,
+        //    Name = "Alice",
+        //    Password = [1, 2, 3, 4, 5, 6],
+        //    userRole = UserRole.Normal
+        //};
+        //User Bob = new User
+        //{
+        //    EmployeeNumber = 102,
+        //    Name = "Bob",
+        //    Password = [1, 2, 3, 4, 5, 6],
+        //    userRole = UserRole.Normal
+        //};
+        //_userRepo.Add(Alice);
+        //_userRepo.Add(Bob);
 
         //初始化用户组
         Group Teacher = new Group
@@ -88,6 +88,9 @@ public partial class App : Application
         _groupRepo.AddGroup(Teacher);
         _groupRepo.AddGroup(Student);
 
+        User Alice = _userRepo.GetById(_userRepo.GetByName("Alice").Id);
+        User Bob = _userRepo.GetById(_userRepo.GetByName("Bob").Id);
+
         //将用户添加到组
         Alice.Group = Teacher;
         Bob.Group = Student;
@@ -98,10 +101,10 @@ public partial class App : Application
         
 
         #region 清除测试用户、用户组
-        _groupRepo.DeleteGroupByName("Teacher");
-        _groupRepo.DeleteGroupByName("Student");
-        _userRepo.DeleteById(_userRepo.GetByName("Alice").Id);
-        _userRepo.DeleteById(_userRepo.GetByName("Bob").Id);
+        //_groupRepo.DeleteGroupByName("Teacher");
+        //_groupRepo.DeleteGroupByName("Student");
+        //_userRepo.DeleteById(_userRepo.GetByName("Alice").Id);
+        //_userRepo.DeleteById(_userRepo.GetByName("Bob").Id);
         #endregion
     }
 
@@ -116,7 +119,7 @@ public partial class App : Application
         AppDbContext.Initialize(ServiceProvider);
 
         // 测试  
-        test(ServiceProvider);
+        //test(ServiceProvider);
 
         // 显示主窗口  
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
@@ -150,6 +153,7 @@ public partial class App : Application
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAttendanceService, AttendanceService>();
         services.AddSingleton<IFaceRecognitionService, FaceRecognitionService>();
+        services.AddSingleton<IAdminService, AdminService>();
 
         // ------------------------ 表示层注册 -----------------------------
         // 注册所有ViewModel（需继承ObservableObject）
@@ -158,9 +162,12 @@ public partial class App : Application
         services.AddTransient<MainViewModel>();
         services.AddTransient<LoginViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<InputDialogViewModel>();
 
         //注册所有View（需继承Window）
         services.AddTransient<MainWindow>();
+        services.AddTransient<InputDialog>();
+        services.AddTransient<EditUserGroup>();
 
         // 注册 INavigationService窗口导航服务
         services.AddSingleton<INavigationService, NavigationService>();
