@@ -115,7 +115,7 @@
                         <Setter Property="ContentTemplate" Value="{StaticResource AttendanceTemplate}"/>
                         <Style.Triggers>
                             <!-- 如果 CurrentSection == Application，则切换到申请模板 -->
-                            <DataTrigger Binding="{Binding CurrentSection}" Value="Application">
+                            <DataTrigger Binding="{Binding CurrentSection}" Value="{x:Static vm:Section.Application}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource ApplicationTemplate}"/>
                             </DataTrigger>
                         </Style.Triggers>
