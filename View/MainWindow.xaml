@@ -4,18 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View"
-        xmlns:viewModels="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
+        xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
         mc:Ignorable="d"
-        Title="人脸识别考勤系统" Height="450" Width="800">
-    <Grid>
-        <Button Content="管理员界面"
-                Command="{Binding OpenAdminCommand}"
-                HorizontalAlignment="Center" Margin="0,78,0,0"
-                VerticalAlignment="Top" Height="47" Width="120"/>
-        
-        <Button Content="员工界面" HorizontalAlignment="Center" Margin="0,170,0,0" VerticalAlignment="Top" Height="47" Width="120"/>
-        
-        <Button Content="扫脸打卡" HorizontalAlignment="Center" Margin="0,263,0,0" VerticalAlignment="Top" Height="47" Width="120"/>
-
-    </Grid>
+        Title="人脸识别考勤系统" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        WindowStartupLocation="CenterScreen">
+    <ContentControl Content="{Binding CurrentViewModel}">
+        <ContentControl.Resources>
+            <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                <local:Home />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+                <local:Login />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:AdminViewModel}">
+                <local:Admin />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:UserDashboardViewModel}">
+                <local:Normal />
+            </DataTemplate>
+        </ContentControl.Resources>
+    </ContentControl>
 </Window>
