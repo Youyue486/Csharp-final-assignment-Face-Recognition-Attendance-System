@@ -10,7 +10,7 @@ using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Mod
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
         // 获取用户信息
         User GetById(int Userid);

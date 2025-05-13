@@ -7,7 +7,7 @@ using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Mod
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
-    class AttendanceRepository : IAttendanceRepository
+    public class AttendanceRepository : IAttendanceRepository
     {
         private readonly AppDbContext _context;
 

@@ -2,13 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Business;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Windows;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
@@ -17,13 +20,10 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
     public partial class InputDialogViewModel : ObservableValidator
     {
         private readonly IAdminService _adminService;
+        private readonly IDlibFaceRecognitionService _faceRecognitionService;
 
         [ObservableProperty]
         private string _name = "";
-        [ObservableProperty]
-        private string? _password;
-        [ObservableProperty]
-        private string? _confirmPassword;
         [ObservableProperty]
         private string _employeeNumber = "";
         [ObservableProperty]
@@ -43,11 +43,15 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         [ObservableProperty]
         private Group? _selectedGroup;
 
-        public InputDialogViewModel(IAdminService adminService)
+        private string ImageFilePath;
+        private byte[] features;
+
+        public InputDialogViewModel(IAdminService adminService,IDlibFaceRecognitionService dlibFaceRecognitionService)
         {
             _adminService = adminService;
             _groups = _adminService.GetAllGroups();
             _selectedGroup = _groups.FirstOrDefault();
+            _faceRecognitionService = dlibFaceRecognitionService;
         }
 
         [RelayCommand]
@@ -57,10 +61,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             {
                 throw new ValidationException("Name cannot be empty.");
             }
-            if (Password != ConfirmPassword)
-            {
-                throw new ValidationException("Passwords do not match.");
-            }
+            
             if (string.IsNullOrWhiteSpace(EmployeeNumber))
             {
                 throw new ValidationException("Employee Number cannot be empty.");
@@ -69,15 +70,18 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             {
                 throw new ValidationException("Age must be between 18 and 70.");
             }
-
+            if (features == null) {
+                MessageBox.Show("选择合适的照片");
+                return;
+            }
             // Fix for CS8604: Ensure Password is not null before calling Encoding.UTF8.GetBytes
-            byte[]? passwordBytes = Password != null ? Encoding.UTF8.GetBytes(Password) : null;
+            //byte[]? passwordBytes = Password != null ? Encoding.UTF8.GetBytes(Password) : null;
 
             UserRole userRole = IsAdmin ? UserRole.Admin : UserRole.Normal;
 
             _adminService.AddUser(
                 Name,
-                passwordBytes,
+                features,
                 int.Parse(EmployeeNumber),
                 SelectedGroup?.GroupName,
                 userRole,
@@ -87,13 +91,49 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             );
             CloseDialog?.Invoke();
         }
+        private bool ComputeImage()
+        {
+            if (ImageFilePath == null)
+            {
+                return false;
+            }
+            var mat=TransformationTools.ImageToMat(ImageFilePath);
+            if (mat == null)
+            {
+                return false;
+            }
+            var res=_faceRecognitionService.DetectFace(mat);
+            if (res.Item2 == null) { 
+                return false;
+            }
+            features = TransformationTools.FaceEncodingToBytes(res.Item2);
+            return true;
+        }
 
         [RelayCommand]
         public void Cancel()
         {
             CloseDialog?.Invoke();
         }
+        [RelayCommand]
+        public void OpenFileDialog()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Title = "选择文件",
+                Filter = "文本文件|*.txt|所有文件|*.*",
+                InitialDirectory = Directory.GetCurrentDirectory()
+            };
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImageFilePath = openFileDialog.FileName;
+                // 在这里可以对选择的文件进行处理，例如读取文件内容等
+                if (ComputeImage()==false) {
+                    MessageBox.Show("图片不合理");
+                }
+            }
+        }
         // 添加一个事件以供外部绑定关闭弹窗逻辑
         public event Action? CloseDialog;
 

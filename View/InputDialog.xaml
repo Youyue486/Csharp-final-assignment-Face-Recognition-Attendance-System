@@ -11,13 +11,6 @@
         <StackPanel>
             <TextBlock Text="姓名：" Margin="0,5"/>
             <TextBox Text="{Binding Name}" Margin="0,0,0,10"/>
-
-            <TextBlock Text="密码：" Margin="0,5"/>
-            <PasswordBox PasswordChar="{Binding Password}" Margin="0,0,0,10"/>
-
-            <TextBlock Text="确认密码：" Margin="0,5"/>
-            <PasswordBox PasswordChar="{Binding ConfirmPassword}" Margin="0,0,0,10"/>
-
             <TextBlock Text="工号：" Margin="0,5"/>
             <TextBox Text="{Binding EmployeeNumber}" Margin="0,0,0,10"/>
 
@@ -26,7 +19,7 @@
 
             <TextBlock Text="年龄：" Margin="0,5"/>
             <TextBox Text="{Binding Age}" Margin="0,0,0,10"/>
-
+            <Button x:Name="openFileButton" Content="选择图片" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Command="{Binding OpenFileDialogCommand}"/>
             <TextBlock Text="是否为管理员：" Margin="0,5"/>
             <StackPanel Orientation="Horizontal">
                 <RadioButton Content="是" IsChecked="{Binding IsAdmin}"/>

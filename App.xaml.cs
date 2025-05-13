@@ -4,10 +4,13 @@ using Csharp_final_assignment_Face_Recognition_Attendance_System.Data;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.View;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
@@ -138,11 +141,13 @@ public partial class App : Application
     #region 配置服务
     private void ConfigureServices(IServiceCollection services)
     {
+        ServiceProvider = services.BuildServiceProvider();
         // ------------------------ 数据访问层注册 ------------------------
         //配置数据库连接字符串
         var dbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\AttendanceSystem.db");
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite($"Data Source={dbPath}"));
+        
         // 注册Repository
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
@@ -152,9 +157,16 @@ public partial class App : Application
         // 注册业务服务
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAttendanceService, AttendanceService>();
-        services.AddSingleton<IFaceRecognitionService, FaceRecognitionService>();
         services.AddSingleton<IAdminService, AdminService>();
-
+        // 注册人脸检测服务
+        services.AddSingleton<IDlibFaceRecognitionService>(v =>
+        {
+            // 加载模型文件（需确保路径正确）
+            string modelsPath = Path.Combine(Directory.GetCurrentDirectory(), "DlibModels");
+            return new DlibFaceRecognitionService(ServiceProvider.GetService<IUserRepository>(),modelsPath);
+        });
+        services.AddSingleton<ICameraService, CameraService>();
+        
         // ------------------------ 表示层注册 -----------------------------
         // 注册所有ViewModel（需继承ObservableObject）
         services.AddTransient<AdminViewModel>();
@@ -163,7 +175,8 @@ public partial class App : Application
         services.AddTransient<LoginViewModel>();
         services.AddTransient<HomeViewModel>();
         services.AddTransient<InputDialogViewModel>();
-
+        services.AddTransient<EmployeeLoginViewModel>();
+        services.AddTransient<PunchCardModelView>();
         //注册所有View（需继承Window）
         services.AddTransient<MainWindow>();
         services.AddTransient<InputDialog>();

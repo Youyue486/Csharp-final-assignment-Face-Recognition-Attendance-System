@@ -13,12 +13,20 @@
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type vm:HomeViewModel}">
                 <local:Home />
-            </DataTemplate>
+             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:EmployeeLoginViewModel}">
+                 <local:EmployeeLogin />
+             </DataTemplate>
+                
             <DataTemplate DataType="{x:Type vm:LoginViewModel}">
                 <local:Login />
             </DataTemplate>
+                
             <DataTemplate DataType="{x:Type vm:AdminViewModel}">
                 <local:Admin />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:PunchCardModelView}">
+                <local:PunchCard/>
             </DataTemplate>
         </ContentControl.Resources>
     </ContentControl>

@@ -21,5 +21,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         { 
             _navigator.NavigateTo<LoginViewModel>();
         }
+
+        [RelayCommand]
+        public void GoToEmployeeLogin()
+        {
+            _navigator.NavigateTo<PunchCardModelView>();
+        }
     }
 }

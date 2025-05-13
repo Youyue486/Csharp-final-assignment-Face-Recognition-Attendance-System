@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Csharp_final_assignment_Face_Recognition_Attendance_System.View.EmployeeLogin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View"
+             xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:EmployeeLoginViewModel}"
+             d:DesignHeight="650"    
+             d:DesignWidth="700"
+             d:Background="White"
+             mc:Ignorable="d">
+    <!-- 外层主Grid（2行布局） -->
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- 按钮行 -->
+            <RowDefinition Height="*"/>
+            <!-- 图片行 -->
+        </Grid.RowDefinitions>
+
+        <!-- 按钮容器（左右对称列） -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <!-- 左半区 -->
+                <ColumnDefinition Width="1*"/>
+                <!-- 右半区 -->
+            </Grid.ColumnDefinitions>
+
+            <!-- 左按钮 -->
+            <Button x:Name="Start" Grid.Column="0" Content="开始" Command="{Binding StartCommand}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="10" Padding="15 8" />
+
+            <!-- 右按钮 -->
+            <Button x:Name="exit" Grid.Column="1" Content="退出" Command="{Binding ExitCommand}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="10" Padding="15 8" />
+        </Grid>
+
+        <!-- 固定大小图片 -->
+        <Image Source="{Binding CameraImage}"  Grid.Row="1" 
+               Width="640" Height="480"  />
+            <!-- 与按钮的间距 -->
+    </Grid>
+</UserControl>

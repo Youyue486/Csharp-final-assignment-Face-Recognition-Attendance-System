@@ -7,7 +7,7 @@ using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Mod
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
 {
-    interface IAttendanceRepository
+    public interface IAttendanceRepository
     {
         /// 添加考勤记录
         void AddAttendanceRecord(AttendanceRecord attendance);

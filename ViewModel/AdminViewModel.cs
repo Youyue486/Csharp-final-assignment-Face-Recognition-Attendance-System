@@ -18,6 +18,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
     public partial class AdminViewModel : ObservableObject
     {
         private readonly IAdminService _adminService;
+        private readonly IDlibFaceRecognitionService _faceRecognitionService;
         [ObservableProperty]
         private UserStatusType? selectedStatusFilter;
         partial void OnSelectedStatusFilterChanged(UserStatusType? value)
@@ -27,9 +28,10 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         [ObservableProperty]
         ICollection<UserDTO> users;
 
-        public AdminViewModel(IAdminService adminService)
+        public AdminViewModel(IAdminService adminService,IDlibFaceRecognitionService faceRecognitionService)
         {
             _adminService = adminService;
+            _faceRecognitionService = faceRecognitionService;
             Users = adminService.GetAllUsersDTO();
         }
 
@@ -47,7 +49,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         public void AddUser()
         {
             var dialog = new InputDialog();
-            var viewModel = new InputDialogViewModel(_adminService);
+            var viewModel = new InputDialogViewModel(_adminService,_faceRecognitionService);
             dialog.DataContext = viewModel;
             viewModel.CloseDialog += () =>
             {

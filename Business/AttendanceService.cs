@@ -17,10 +17,14 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         {
             _context = context;
         }
-        public void ClockIn(int userId)
+        /// <summary>
+        /// 考勤记录
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <exception cref="Exception"></exception>
+        public void ClockIn(User user)
         {
             // 获取用户信息
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
                 throw new Exception("用户不存在");
@@ -51,7 +55,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             // 创建考勤记录
             var attendanceRecord = new AttendanceRecord
             {
-                UserId = userId,
+                UserId = user.Id,
                 User = user, // 修复：设置所需的成员 'User'
                 CheckTime = now,
                 CheckType = CheckType.CheckIn // 假设 CheckType 是 CheckIn

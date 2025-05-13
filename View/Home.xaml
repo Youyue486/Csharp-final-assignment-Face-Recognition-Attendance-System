@@ -11,8 +11,11 @@
              d:Background="White"
              mc:Ignorable="d">
     <Grid>
+        <StackPanel>
         <Button Content="管理员登陆" HorizontalAlignment="Center" VerticalAlignment="Center" Height="56" Width="130"
                 Command="{Binding GoToAdminLoginCommand}"/>
-
+        <Button Content="员工打卡" HorizontalAlignment="Center" VerticalAlignment="Center" Height="56" Width="130"
+                Command="{Binding GoToEmployeeLoginCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
