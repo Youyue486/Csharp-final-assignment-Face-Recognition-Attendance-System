@@ -9,6 +9,7 @@
         Title="人脸识别考勤系统" Height="450" Width="800"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         WindowStartupLocation="CenterScreen">
+
     <ContentControl Content="{Binding CurrentViewModel}">
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type vm:HomeViewModel}">

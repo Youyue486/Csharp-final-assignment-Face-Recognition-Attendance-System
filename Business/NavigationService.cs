@@ -12,14 +12,20 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     public class NavigationService : INavigationService
     {
-        private ObservableObject? _currentViewModel;
+        public required ObservableObject _currentViewModel;
+
 
         public void NavigateTo<T>()
         {
-            CurrentViewModel = App.ServiceProvider.GetService<T>() as ObservableObject;
+            var viewModel = App.ServiceProvider.GetService<T>() as ObservableObject;
+            if (viewModel == null)
+            {
+                throw new InvalidOperationException($"Unable to resolve service for type {typeof(T)}.");
+            }
+            CurrentViewModel = viewModel;
         }
 
-        public ObservableObject? CurrentViewModel
+        public ObservableObject CurrentViewModel
         {
             get => _currentViewModel;
             set

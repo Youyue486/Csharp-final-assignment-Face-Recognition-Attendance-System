@@ -48,7 +48,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             [Required, MaxLength(50)]
             public required string GroupName { get; set; }
 
-            public string? groupDescription { get; set; }
+            public string? GroupDescription { get; set; }
 
             //导航属性
             public ICollection<User> Users { get; set; } = [];
@@ -60,16 +60,16 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
             public int Id { get; set; }
 
             [Required]
-            public TimeSpan WorkStartTime { get; set; }//上班打卡时间
+            public TimeSpan WorkStartTime { get; set; } = new TimeSpan(9, 0, 0);//上班打卡时间
 
             [Required]
-            public TimeSpan WorkEndTime { get; set; }//下班打卡时间
+            public TimeSpan WorkEndTime { get; set; } = new TimeSpan(18, 0, 0);//下班打卡时间
 
             [Required]
             public int CheckInWindow { get; set; }//上班打卡时间窗(分钟)
 
             [Required]
-            public WorkDay WorkDays { get; set; } //工作日（按位存储）
+            public WorkDay WorkDays { get; set; } = WorkDay.无; //工作日（按位存储）
 
             //导航属性
             public int? GroupId { get; set; }

@@ -47,7 +47,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
                         WorkStartTime = new TimeSpan(9, 0, 0),
                         WorkEndTime = new TimeSpan(18, 0, 0),
                         CheckInWindow = 15,
-                        WorkDays = WorkDay.Monday | WorkDay.Tuesday | WorkDay.Wednesday | WorkDay.Thursday | WorkDay.Friday
+                        WorkDays = WorkDay.周一 | WorkDay.周二 | WorkDay.周三 | WorkDay.周四 | WorkDay.周五
                     }
                 });
                 context.SaveChanges();

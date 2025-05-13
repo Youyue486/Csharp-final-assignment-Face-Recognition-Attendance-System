@@ -115,14 +115,28 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Core
     [Flags]
     public enum WorkDay
     {
-        None = 0,
-        Monday = 1 << 0,    // 1
-        Tuesday = 1 << 1,   // 2
-        Wednesday = 1 << 2, // 4
-        Thursday = 1 << 3,  // 8
-        Friday = 1 << 4,    // 16
-        Saturday = 1 << 5,  // 32
-        Sunday = 1 << 6     // 64
+        [Description("无")]
+        无 = 0,
+        [Description("周一")]
+        周一 = 1 << 0,    // 1
+
+        [Description("周二")]
+        周二 = 1 << 1,   // 2
+
+        [Description("周三")]
+        周三 = 1 << 2, // 4
+
+        [Description("周四")]
+        周四 = 1 << 3,  // 8
+
+        [Description("周五")]
+        周五 = 1 << 4,    // 16
+
+        [Description("周六")]
+        周六 = 1 << 5,  // 32
+
+        [Description("周日")]
+        周日 = 1 << 6     // 64
     }
     #endregion
 }

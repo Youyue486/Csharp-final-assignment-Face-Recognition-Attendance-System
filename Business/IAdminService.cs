@@ -25,8 +25,8 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         public UserDTO UserInfomation(int id);
         public ICollection<UserDTO> GetAllUsersDTO();//默认按字典序
         public ICollection<User> GetUsersByGroup(Group group);
-        public ICollection<UserDTO> GetUserDTOsByUserStatuses(UserStatusType? userStatusType);//可以根据多个状态查询 
-
+        public ICollection<UserDTO> FindUserDTOsByUserStatuses(ICollection<UserDTO> users, UserStatusType? userStatusType);//可以根据多个状态查询 
+        public ICollection<UserDTO> FindUserDTOsByNameAllowDuplicated(ICollection<UserDTO> users, string name);
         //TODO导出考勤
         #endregion
 
@@ -41,7 +41,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         public void SetSchdule(string groupName, GroupSchedule schedule);
         public void SetHolidayAdjustment(string groupNamest, HolidayAdjustment adjustment);
         //查
-        public ICollection<Group> GetAllGroups();
+        public GroupDTO GetGroupDTOByName(string groupName);
+        public ICollection<GroupDTO> GetAllGroupsDTO();
+        public ICollection<GroupDTO> GetGroupsDTOByWorkDay(WorkDay workDay);
         #endregion
 
         #region 用户请求

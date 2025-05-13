@@ -64,38 +64,38 @@ public partial class App : Application
         Group Teacher = new Group
         {
             GroupName = "Teacher",
-            groupDescription = "This is a Teacher group.",
+            GroupDescription = "This is a Teacher group.",
             Schedule = new GroupSchedule
             {
                 WorkStartTime = new TimeSpan(9, 0, 0),
                 WorkEndTime = new TimeSpan(18, 0, 0),
                 CheckInWindow = 15,
-                WorkDays = (WorkDay.Monday | WorkDay.Wednesday | WorkDay.Friday),
+                WorkDays = (WorkDay.周一 | WorkDay.周二 | WorkDay.周五),
             }
         };
         Group Student = new Group
         {
             GroupName = "Student",
-            groupDescription = "This is a Student group.",
+            GroupDescription = "This is a Student group.",
             Schedule = new GroupSchedule
             {
                 WorkStartTime = new TimeSpan(9, 0, 0),
                 WorkEndTime = new TimeSpan(18, 0, 0),
                 CheckInWindow = 15,
-                WorkDays = (WorkDay.Tuesday | WorkDay.Thursday | WorkDay.Saturday),
+                WorkDays = (WorkDay.周二 | WorkDay.周四 | WorkDay.周六),
             }
         };
         _groupRepo.AddGroup(Teacher);
         _groupRepo.AddGroup(Student);
 
-        User Alice = _userRepo.GetById(_userRepo.GetByName("Alice").Id);
-        User Bob = _userRepo.GetById(_userRepo.GetByName("Bob").Id);
+        //User Alice = _userRepo.GetById(_userRepo.GetByName("Alice").Id);
+        //User Bob = _userRepo.GetById(_userRepo.GetByName("Bob").Id);
 
         //将用户添加到组
-        Alice.Group = Teacher;
-        Bob.Group = Student;
-        _userRepo.Update(Alice);
-        _userRepo.Update(Bob);
+        //Alice.Group = Teacher;
+        //Bob.Group = Student;
+        //_userRepo.Update(Alice);
+        //_userRepo.Update(Bob);
         #endregion
 
         
@@ -163,6 +163,9 @@ public partial class App : Application
         services.AddTransient<LoginViewModel>();
         services.AddTransient<HomeViewModel>();
         services.AddTransient<InputDialogViewModel>();
+        services.AddTransient<UserListViewModel>();
+        services.AddTransient<AttendanceRuleViewModel>();
+        services.AddTransient<UsersRequestsViewModel>();
 
         //注册所有View（需继承Window）
         services.AddTransient<MainWindow>();

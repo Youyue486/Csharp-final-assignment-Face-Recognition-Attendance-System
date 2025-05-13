@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="Csharp_final_assignment_Face_Recognition_Attendance_System.View.AttendanceRule"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:tools="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.Tools"
+             xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View"
+             xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:AttendanceRuleViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--搜索栏、添加用户-->
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="50"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding SearchText}" Margin="10,10,10,10" Grid.Column="0" Height="30"/>
+            <Button Grid.Column="1" Command="{Binding SearchGroupCommand}" Content="组名搜索" Width="80" Height="30" Margin="0,10,10,10"/>
+            <Button Grid.Column="2" Command="{Binding AddUserCommand}" Content="新增组" Width="80" Height="30" Margin="0,10,10,10"/>
+        </Grid>
+        <!--按用户状态筛选-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="50"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="20"/>
+                <ColumnDefinition Width="*" MinWidth="30"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="上班日" TextAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="1" Content="周一" IsChecked="{Binding IsMonday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="2" Content="周二" IsChecked="{Binding IsTusday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="3" Content="周三" IsChecked="{Binding IsWednesday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="4" Content="周四" IsChecked="{Binding IsThursday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="5" Content="周五" IsChecked="{Binding IsFriday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="6" Content="周六" IsChecked="{Binding IsSaturday}" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="7" Content="周日" IsChecked="{Binding IsSunday}" VerticalAlignment="Center"/>
+        </Grid>
+        <Separator Grid.Row="2"/>
+        <!--选择排序方式、导出表格选项-->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55"/>
+                <ColumnDefinition Width="*" MinWidth="100"/>
+                <ColumnDefinition Width="*" MinWidth="150"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="排序方式" TextAlignment="Center" VerticalAlignment="Center"/>
+            <ComboBox ItemsSource="{Binding SortOptions}"
+                      SelectedItem="{Binding SelectedSortType, Mode=TwoWay}"
+                      Grid.Column="1" Width="100" Height="30" HorizontalAlignment="Left">
+                <ComboBox.Resources>
+                    <tools:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
+                </ComboBox.Resources>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Grid.Column="2" Content="导出表格" Width="80" Height="30" Margin="0,0,30,0" HorizontalAlignment="Right"/>
+        </Grid>
+        <Separator Grid.Row="4"/>
+        <ListView Grid.Row="5" ItemsSource="{Binding GroupsDTO}">
+            <!--设置ListView的Item属性，实现右键弹出浮窗-->
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Tag"
+            Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="修改信息"
+                                          Command="{Binding Path=PlacementTarget.Tag.EditUserGroupCommand, 
+                                                RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          CommandParameter="{Binding}"/>
+                                <MenuItem Header="删除"
+                                          Command="{Binding Path=PlacementTarget.Tag.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <!--ListView内容-->
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="组名" Width ="100" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="人数" Width="30" DisplayMemberBinding="{Binding MemberCount}"/>
+                    <GridViewColumn Header="上班日" Width="200" DisplayMemberBinding="{Binding WorkDays}"/>
+                    <GridViewColumn Header="上班时间" Width="100" DisplayMemberBinding="{Binding WorkStartTime}"/>
+                    <GridViewColumn Header="下班时间" Width="100" DisplayMemberBinding="{Binding WorkEndTime}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

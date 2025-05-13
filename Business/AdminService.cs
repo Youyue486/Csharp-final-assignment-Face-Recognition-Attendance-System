@@ -2,12 +2,17 @@
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Data;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
@@ -116,16 +121,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             return usersDTO;
         }
 
-        public ICollection<UserDTO> GetUserDTOsByUserStatuses(UserStatusType? Statuses)
+        public ICollection<UserDTO> FindUserDTOsByUserStatuses(ICollection<UserDTO> users, UserStatusType? Statuses)
         {
             if (Statuses == null) return GetAllUsersDTO();
-            ICollection<User> users = _userRepository.GetAllUsers();
-            ICollection<User>? selectedUsers = users.Where(user => (user.Statuses & Statuses) != 0) as ICollection<User>;
+            ICollection<UserDTO>? selectedUsers = users.Where(user => (user.Statuses & Statuses) == Statuses).ToList();
             ICollection<UserDTO>? selectedUsersDTO = [];
-            foreach(User user in users)
-            {
-                selectedUsersDTO.Add(UserInfomation(user.Id));
-            }
             return selectedUsersDTO;
         }
         public ICollection<User> GetUsersByGroup(Group group)
@@ -133,6 +133,11 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             ICollection<User> users = _userRepository.GetAllUsers();
             var selectedUsers = users.Where(user => user.Group == group) as ICollection<User>;
             return selectedUsers == null?[]:selectedUsers;
+        }
+        public ICollection<UserDTO> FindUserDTOsByNameAllowDuplicated(ICollection<UserDTO> users, string name)
+        {
+            var selectedUsers = users.Where(u => u.Name.Contains(name)).ToList();
+            return selectedUsers;
         }
         //TODO导出考勤
         #endregion
@@ -144,7 +149,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             Group group = new Group()
             {
                 GroupName = groupName,
-                groupDescription = groupDescription
+                GroupDescription = groupDescription
             };
             _groupRepository.AddGroup(group);
         }
@@ -185,9 +190,52 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             throw new NotImplementedException();
         }
         //查
-        public ICollection<Group> GetAllGroups()
+        public GroupDTO GetGroupDTOByName(string groupName)
         {
-            return _groupRepository.GetAllGroups();
+            Group? group = _groupRepository.GetGroupByName(groupName);
+            if (group == null)
+            {
+                throw new Exception($"不存在组:{groupName}");
+            }
+            var members = group.Users?
+                               .Select(member => UserInfomation(member.Id))
+                               .Where(dto => dto != null)
+                               .ToList() ?? new List<UserDTO>();
+            GroupDTO groupDTO = new GroupDTO()
+            {
+                Id = group.Id,
+                Name = group.GroupName,
+                Description = group.GroupDescription,
+                Members = members,
+                MemberCount = (group.Users == null) ? 0 :group.Users.Count,
+                WorkDays = group.Schedule?.WorkDays,
+                WorkStartTime = group.Schedule?.WorkStartTime,
+                WorkEndTime = group.Schedule?.WorkEndTime
+            };
+            return groupDTO;
+        }
+        public ICollection<GroupDTO> GetAllGroupsDTO()
+        {
+            List<Group> groups = _groupRepository.GetAllGroups().ToList();
+            ICollection<GroupDTO> groupDTOs = [];
+            foreach (var group in groups)
+            {
+                groupDTOs.Add(GetGroupDTOByName(group.GroupName));
+            }
+            return groupDTOs;
+        }
+        public ICollection<GroupDTO> GetGroupsDTOByWorkDay(WorkDay workDay)
+        {
+            ICollection<Group> groups = _groupRepository.GetAllGroups();
+            ICollection<GroupDTO> groupDTOs = [];
+            foreach (Group group in groups)
+            {
+                if ((group.Schedule?.WorkDays & workDay) == workDay)
+                {
+                    groupDTOs.Add(GetGroupDTOByName(group.GroupName));
+                }
+            }
+            return groupDTOs;
         }
         #endregion
 

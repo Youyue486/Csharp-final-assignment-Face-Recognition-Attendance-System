@@ -7,8 +7,10 @@ using Csharp_final_assignment_Face_Recognition_Attendance_System.View;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Models;
@@ -18,67 +20,40 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
     public partial class AdminViewModel : ObservableObject
     {
         private readonly IAdminService _adminService;
-        [ObservableProperty]
-        private UserStatusType? selectedStatusFilter;
-        partial void OnSelectedStatusFilterChanged(UserStatusType? value)
+        private ObservableObject _currentView = App.ServiceProvider.GetRequiredService<UserListViewModel>();
+        public ObservableObject CurrentView
         {
-            LoadUserDTOs(value);
+            get => _currentView;
+            set
+            {
+                if (_currentView != value)
+                {
+                    _currentView = value;
+                    OnPropertyChanged();
+                }
+            }
         }
-        [ObservableProperty]
-        ICollection<UserDTO> users;
 
         public AdminViewModel(IAdminService adminService)
         {
             _adminService = adminService;
-            Users = adminService.GetAllUsersDTO();
         }
 
-        private void LoadUserDTOs(UserStatusType? value)
+        [RelayCommand]
+        void SwitchView(string viewName)
         {
-            if (value == null)
-                Users = _adminService.GetAllUsersDTO();
-            else
+            switch (viewName)
             {
-                Users = _adminService.GetUserDTOsByUserStatuses(value);
+                case "UserList":
+                    CurrentView = App.ServiceProvider.GetRequiredService<UserListViewModel>();
+                    break;
+                case "AttendanceRule":
+                    CurrentView = App.ServiceProvider.GetRequiredService<AttendanceRuleViewModel>();
+                    break;
+                case "UsersRequests":
+                    CurrentView = App.ServiceProvider.GetRequiredService<UsersRequestsViewModel>();
+                    break;
             }
-        }
-
-        [RelayCommand]
-        public void AddUser()
-        {
-            var dialog = new InputDialog();
-            var viewModel = new InputDialogViewModel(_adminService);
-            dialog.DataContext = viewModel;
-            viewModel.CloseDialog += () =>
-            {
-                dialog.Close();
-            };
-            dialog.ShowDialog();
-            Users = _adminService.GetAllUsersDTO();//优化TODO:这里每次添加用户后都要重新加载一次列表
-        }
-
-        [RelayCommand]
-        public void EditUserGroup(UserDTO user)
-        {
-            var dialog = new EditUserGroup();
-            var viewModel = new EditUserGroupViewModel(_adminService, user);
-            dialog.DataContext = viewModel;
-            viewModel.CloseDialog += () =>
-            {
-                dialog.Close();
-            };
-            dialog.ShowDialog();
-            Users = _adminService.GetAllUsersDTO();
-        }
-
-        [RelayCommand]
-        public void DeleteUser(UserDTO user)
-        {
-            if (user == null)
-                return;
-            _adminService.DeleteUser(user.Name);
-            Users = _adminService.GetAllUsersDTO();
-            Users = _adminService.GetAllUsersDTO();
-        }
+        }    
     }
 }

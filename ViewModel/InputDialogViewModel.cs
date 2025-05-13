@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Business;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +28,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         [ObservableProperty]
         private string _employeeNumber = "";
         [ObservableProperty]
-        private ICollection<Group> _groups;
+        private ICollection<GroupDTO> _groupDTOs;
         [ObservableProperty]
         private int? _age;
         [ObservableProperty]
@@ -41,13 +42,13 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
 
         // Rename the backing field to follow the "lowerCamel" pattern and make it readonly
         [ObservableProperty]
-        private Group? _selectedGroup;
+        private GroupDTO? _selectedGroupDTO;
 
         public InputDialogViewModel(IAdminService adminService)
         {
             _adminService = adminService;
-            _groups = _adminService.GetAllGroups();
-            _selectedGroup = _groups.FirstOrDefault();
+            _groupDTOs = _adminService.GetAllGroupsDTO();
+            _selectedGroupDTO = _groupDTOs.FirstOrDefault();
         }
 
         [RelayCommand]
@@ -79,7 +80,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
                 Name,
                 passwordBytes,
                 int.Parse(EmployeeNumber),
-                SelectedGroup?.GroupName,
+                SelectedGroupDTO?.Name,
                 userRole,
                 Age,
                 Email,

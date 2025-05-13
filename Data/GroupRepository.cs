@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Data
         // 获取所有组
         public ICollection<Group> GetAllGroups()
         {
-            return _context.Groups.ToList();
+            return _context.Groups
+                           .Include(g => g.Schedule)
+                           .ToList();
         }
         // 根据ID获取组  
         public Group? GetGroupByName(string? name)

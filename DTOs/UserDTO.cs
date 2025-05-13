@@ -34,6 +34,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs
         public string? GroupName { get; set; }
         public int? GroupId { get; set; }
         public UserStatusType Statuses { get; set; }
+        public string statusDescription { get; set; } = "";
         public ICollection<Request> Requests { get; set; } = [];
     }
 }

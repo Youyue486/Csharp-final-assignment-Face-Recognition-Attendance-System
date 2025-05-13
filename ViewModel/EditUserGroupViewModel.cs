@@ -16,25 +16,25 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
     {
         private IAdminService _adminService;
         [ObservableProperty]
-        private ICollection<Group> _groups;
+        private ICollection<GroupDTO> _groupDTOs;
         [ObservableProperty]
-        private Group? _selectedGroup;
+        private GroupDTO? _selectedGroupDTO;
         private readonly UserDTO _userDTO;
 
         public EditUserGroupViewModel(IAdminService adminService, UserDTO user)
         {
             _adminService = adminService;
-            _groups = _adminService.GetAllGroups();
-            _selectedGroup = _groups.FirstOrDefault();
+            _groupDTOs = _adminService.GetAllGroupsDTO();
+            _selectedGroupDTO = _groupDTOs.FirstOrDefault();
             _userDTO = user;
         }
 
         [RelayCommand]
         public void Confirm()
         {
-            if (null == SelectedGroup)
+            if (null == SelectedGroupDTO)
                 return;
-            _adminService.UpdateUserGroup(_userDTO.Name, SelectedGroup.GroupName);
+            _adminService.UpdateUserGroup(_userDTO.Name, SelectedGroupDTO.Name);
             CloseDialog?.Invoke();
         }
 
