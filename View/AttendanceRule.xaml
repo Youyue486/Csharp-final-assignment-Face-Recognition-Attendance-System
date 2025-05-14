@@ -27,7 +27,7 @@
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding SearchText}" Margin="10,10,10,10" Grid.Column="0" Height="30"/>
             <Button Grid.Column="1" Command="{Binding SearchGroupCommand}" Content="组名搜索" Width="80" Height="30" Margin="0,10,10,10"/>
-            <Button Grid.Column="2" Command="{Binding AddUserCommand}" Content="新增组" Width="80" Height="30" Margin="0,10,10,10"/>
+            <Button Grid.Column="2" Command="{Binding AddGroupCommand}" Content="新增组" Width="80" Height="30" Margin="0,10,10,10"/>
         </Grid>
         <!--按用户状态筛选-->
         <Grid Grid.Row="1">
@@ -86,11 +86,11 @@
                         <Setter.Value>
                             <ContextMenu>
                                 <MenuItem Header="修改信息"
-                                          Command="{Binding Path=PlacementTarget.Tag.EditUserGroupCommand, 
+                                          Command="{Binding Path=PlacementTarget.Tag.EditGroupCommand, 
                                                 RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding}"/>
                                 <MenuItem Header="删除"
-                                          Command="{Binding Path=PlacementTarget.Tag.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding Path=PlacementTarget.Tag.DeleteGroupCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding}"/>
                             </ContextMenu>
                         </Setter.Value>

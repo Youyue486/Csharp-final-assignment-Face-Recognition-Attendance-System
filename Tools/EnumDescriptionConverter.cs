@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Tools
 {
-    public class EnumDescriptionConverter : IEnumDescriptionConverter
+    public class EnumDescriptionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

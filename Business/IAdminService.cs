@@ -32,7 +32,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 
         #region 浏览所有组
         //增
-        public void AddGroup(string groupName, string? groupDescription = null);
+        public void AddGroup(string groupName, WorkDay workDays, TimeSpan startTime, TimeSpan endTime, string? groupDescription = null);
         //删
         public void DeleteGroupByName(string gruopName);
         public void DeleteSchdule(string groupName);
@@ -40,6 +40,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         //改
         public void SetSchdule(string groupName, GroupSchedule schedule);
         public void SetHolidayAdjustment(string groupNamest, HolidayAdjustment adjustment);
+        public void UpdateGroup(int id, string groupName, WorkDay workDays, TimeSpan startTime, TimeSpan endTime, string? groupDescription = null);
         //查
         public GroupDTO GetGroupDTOByName(string groupName);
         public ICollection<GroupDTO> GetAllGroupsDTO();
@@ -47,7 +48,8 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
         #endregion
 
         #region 用户请求
-        public void GetAllUsersRequest();
+        public ICollection<Request> LoadUserRequests(int userId);
+        public ICollection<Request> LoadAllUsersPendingRequests();
         public void AcceptUserRequest(int requestId);
         public void RejectUserRequest(int requestId);
         #endregion

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Business;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs;
+using Csharp_final_assignment_Face_Recognition_Attendance_System.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -137,6 +138,20 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
         }
 
         [RelayCommand]
+        void AddGroup()
+        {
+            var dialog = new AddGroup();
+            var dialogViewModel = new AddGroupViewModel(_adminService);
+            dialog.DataContext = dialogViewModel;
+            dialogViewModel.CloseDialog += () =>
+            {
+                dialog.Close();
+                LoadGroupsDTO();
+            };
+            dialog.ShowDialog();
+        }
+
+        [RelayCommand]
         void SearchGroup()
         {
             if (SearchText == "")
@@ -152,6 +167,35 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             {
                 GroupsDTO = [];
             }
+        }
+
+        [RelayCommand]
+        void DeleteGroup(GroupDTO group)
+        {
+            if (group == null)
+            {
+                return;
+            }
+            _adminService.DeleteGroupByName(group.Name);
+            LoadGroupsDTO();
+        }
+
+        [RelayCommand]
+        void EditGroup(GroupDTO group)
+        {
+            if (group == null)
+            {
+                return;
+            }
+            var dialog = new EditGroup();
+            var dialogViewModel = new EditGroupViewModel(_adminService, group);
+            dialog.DataContext = dialogViewModel;
+            dialogViewModel.CloseDialog += () =>
+            {
+                dialog.Close();
+                LoadGroupsDTO();
+            };
+            dialog.ShowDialog();
         }
     }
 }

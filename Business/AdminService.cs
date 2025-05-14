@@ -19,12 +19,14 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     class AdminService : IAdminService
     {
+        private readonly AppDbContext _appDbContext;
         private IUserRepository _userRepository;
         private IGroupRepository _groupRepository;
-        public AdminService(IUserRepository userRepository, IGroupRepository groupRepository)
+        public AdminService(IUserRepository userRepository, IGroupRepository groupRepository, AppDbContext context)
         {
             _userRepository = userRepository;
             _groupRepository = groupRepository;
+            _appDbContext = context;
         }
         
         #region 浏览所有用户  DONE!
@@ -144,11 +146,18 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 
         #region 浏览所有组  DONE!
         //增
-        public void AddGroup(string groupName, string? groupDescription = null)
+        public void AddGroup(string groupName, WorkDay workDays, TimeSpan startTime, TimeSpan endTime, string? groupDescription = null)
         {
             Group group = new Group()
             {
                 GroupName = groupName,
+                Schedule = new GroupSchedule()
+                {
+                    WorkStartTime = startTime,
+                    WorkEndTime = endTime,
+                    CheckInWindow = 15,
+                    WorkDays = workDays,
+                },
                 GroupDescription = groupDescription
             };
             _groupRepository.AddGroup(group);
@@ -237,20 +246,69 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
             }
             return groupDTOs;
         }
+        public void UpdateGroup(int id, string groupName, WorkDay workDays, TimeSpan startTime, TimeSpan endTime, string? groupDescription = null)
+        {
+            Group? group = _groupRepository.GetGroupById(id);
+            if (group == null)
+            {
+                throw new Exception($"不存在组:{groupName}");
+            }
+            group.GroupName = groupName;
+            group.GroupDescription = groupDescription;
+            if(group.Schedule == null)
+            {
+                group.Schedule = new GroupSchedule
+                {
+                    WorkDays = workDays,
+                    WorkStartTime = startTime,
+                    WorkEndTime = endTime
+                };
+            }
+            else
+            {
+                group.Schedule.WorkDays = workDays;
+                group.Schedule.WorkStartTime = startTime;
+                group.Schedule.WorkEndTime = endTime;
+            }
+            _groupRepository.UpdateGroup(group);
+        }
         #endregion
 
         #region 用户请求  TODO
-        public void GetAllUsersRequest()
+        public ICollection<Request> LoadUserRequests(int userId)
         {
-            throw new NotImplementedException();
+            return _appDbContext.Requests
+            .Where(r => r.UserId == userId)
+            .AsNoTracking()
+            .OrderByDescending(r => r.SubmitTime)
+            .ToList();
+        }
+        public ICollection<Request> LoadAllUsersPendingRequests()
+        {
+            return _appDbContext.Requests
+            .Where(r => r.RequestStatus == RequestStatus.Pending)
+            .AsNoTracking()
+            .OrderByDescending(r => r.SubmitTime)
+            .ToList();
+        }
+
+        private void UpdateRequestStatus(int requestId, RequestStatus status)
+        {
+            Request? request = _appDbContext.Requests.Find(requestId);
+            if (request == null)
+            {
+                throw new Exception($"未找到请求:{requestId}");
+            }
+            request.RequestStatus = status;
+            _appDbContext.SaveChanges();
         }
         public void AcceptUserRequest(int requestId)
         {
-            throw new NotImplementedException();
+            UpdateRequestStatus(requestId, RequestStatus.Approved);
         }
         public void RejectUserRequest(int requestId)
         {
-            throw new NotImplementedException();
+            UpdateRequestStatus (requestId, RequestStatus.Rejected);
         }
         #endregion
 

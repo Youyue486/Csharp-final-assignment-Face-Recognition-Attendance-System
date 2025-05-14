@@ -22,7 +22,7 @@
             <TextBox Text="{Binding EmployeeNumber}" Margin="0,0,0,10"/>
 
             <TextBlock Text="所属组：" Margin="0,5"/>
-            <ComboBox ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}" DisplayMemberPath="GroupName" Margin="0,0,0,10"/>
+            <ComboBox ItemsSource="{Binding GroupDTOs}" SelectedItem="{Binding SelectedGroupDTO}" DisplayMemberPath="Name" Margin="0,0,0,10"/>
 
             <TextBlock Text="年龄：" Margin="0,5"/>
             <TextBox Text="{Binding Age}" Margin="0,0,0,10"/>

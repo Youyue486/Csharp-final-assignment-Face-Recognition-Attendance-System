@@ -166,6 +166,7 @@ public partial class App : Application
         services.AddTransient<UserListViewModel>();
         services.AddTransient<AttendanceRuleViewModel>();
         services.AddTransient<UsersRequestsViewModel>();
+        services.AddTransient<AddGroupViewModel>();
 
         //注册所有View（需继承Window）
         services.AddTransient<MainWindow>();

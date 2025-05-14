@@ -4,9 +4,64 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.View"
+             xmlns:vm="clr-namespace:Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:UsersRequestsViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <Grid>
-            
+        <ListView Grid.Row="5" ItemsSource="{Binding UserRequests}">
+            <!--ListView内容-->
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="姓名" Width="50" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="所属组" Width="70" DisplayMemberBinding="{Binding GroupName}"/>
+                    <GridViewColumn Header="手机号" Width="100" DisplayMemberBinding="{Binding PhoneNumber}"/>
+                    <GridViewColumn Header="邮箱" Width="120" DisplayMemberBinding="{Binding Email}"/>
+                    <GridViewColumn Header="请求类型" Width="100" DisplayMemberBinding="{Binding}"/>
+                    <GridViewColumn Header="理由"  DisplayMemberBinding="{Binding}"/>
+
+                    <GridViewColumn Header="操作" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <!-- 同意按钮 -->
+                                    <Button Content="同意" 
+                                    Width="60" 
+                                    Margin="0,0,5,0"
+                                    Command="{Binding DataContext.AcceptRequestCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+                                        <!-- 传递当前行数据作为参数 -->
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#4CAF50"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- 驳回按钮 -->
+                                    <Button Content="驳回" 
+                                    Width="60"
+                                    Command="{Binding DataContext.RejectRequestCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+                                        <!-- 传递当前行数据作为参数 -->
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#f44336"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>

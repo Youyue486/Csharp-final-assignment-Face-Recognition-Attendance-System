@@ -164,9 +164,9 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             viewModel.CloseDialog += () =>
             {
                 dialog.Close();
+                LoadUserDTOs();//优化TODO:这里每次添加用户后都要重新加载一次列表
             };
             dialog.ShowDialog();
-            Users = _adminService.GetAllUsersDTO();//优化TODO:这里每次添加用户后都要重新加载一次列表
         }
 
         [RelayCommand]
@@ -189,7 +189,6 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel
             if (user == null)
                 return;
             _adminService.DeleteUser(user.Name);
-            Users = _adminService.GetAllUsersDTO();
             Users = _adminService.GetAllUsersDTO();
         }
 
