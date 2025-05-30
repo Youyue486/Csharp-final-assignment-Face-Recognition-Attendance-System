@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Csharp_final_assignment_Face_Recognition_Attendance_System.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -6,24 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.Business
 {
     public class NavigationService : INavigationService
     {
-        private readonly IServiceProvider _provider;
-        private readonly MainViewModel _mainVM;
+        private ObservableObject? _currentViewModel;
 
-        public NavigationService(IServiceProvider provider, MainViewModel mainVM)
+        public void NavigateTo<T>()
         {
-            _provider = provider;
-            _mainVM = mainVM;
+            CurrentViewModel = App.ServiceProvider.GetService<T>() as ObservableObject;
         }
 
-        public void NavigateTo<TViewModel>() where TViewModel : ObservableObject
+        public ObservableObject? CurrentViewModel
         {
-            var vm = _provider.GetRequiredService<TViewModel>();
-            _mainVM.CurrentViewModel = vm;
+            get => _currentViewModel;
+            set
+            {
+                if (_currentViewModel != value)
+                {
+                    _currentViewModel = value;
+                    CurrentViewModelChanged?.Invoke();
+                }
+            }
         }
+        public event Action? CurrentViewModelChanged;
     }
 }
