@@ -62,3 +62,5 @@
 
 1. 识别所属人脸，打卡成功、迟到打卡、下班打卡给出不同弹窗提示
 2. 修改人员状态到数据库
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Youyue486/Csharp-final-assignment-Face-Recognition-Attendance-System)
