@@ -1,4 +1,4 @@
-﻿using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
+using Csharp_final_assignment_Face_Recognition_Attendance_System.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +9,7 @@ using static Csharp_final_assignment_Face_Recognition_Attendance_System.Core.Mod
 
 namespace Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs
 {
-    class UserDTO
+    public class UserDTO
     {
         [Required]
         public int EmployeeNumber { get; set; }
@@ -31,7 +31,7 @@ namespace Csharp_final_assignment_Face_Recognition_Attendance_System.DTOs
 
         public double AttendenceRate { get; set; } = 1.0;
 
-        public Group? Group { get; set; }
+        public string? GroupName { get; set; }
         public int? GroupId { get; set; }
         public UserStatusType Statuses { get; set; }
         public ICollection<Request> Requests { get; set; } = [];
